@@ -1,10 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+
 import { Header } from "~/components/Header";
 
-import { api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 
 const Home: NextPage = () => {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -26,7 +28,10 @@ const Home: NextPage = () => {
 
 export default Home;
 
+type Topic = RouterOutputs["topic"]["getAll"][0];
+
 const Content: React.FC = () => {
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const { data: sessionData } = useSession();
 
   const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
@@ -34,7 +39,11 @@ const Content: React.FC = () => {
     { enabled: sessionData?.user !== undefined }
   );
 
-  const createTopic = api.topic.create.useMutation({});
+  const createTopic = api.topic.create.useMutation({
+    onSuccess: () => {
+      void refetchTopics();
+    },
+  });
 
   return (
     <div className="mx-5 mt-5 grid grid-cols-4 gap-2">
@@ -44,9 +53,9 @@ const Content: React.FC = () => {
             <li key={topic.id}>
               <a
                 href="#"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  // setSelectedTopic(topic);
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedTopic(topic);
                 }}
               >
                 {topic.title}
