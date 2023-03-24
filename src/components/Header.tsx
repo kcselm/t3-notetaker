@@ -4,8 +4,8 @@ export const Header = () => {
   const { data: sessionData } = useSession();
 
   return (
-    <div className="navbar bg-primary text-primary-content">
-      <div className="flex-1 pl-5 text-3xl font-bold">
+    <div className="navbar bg-secondary text-primary-content">
+      <div className="flex-1 pl-5 text-3xl font-bold text-white">
         {sessionData?.user?.name ? `Notes for ${sessionData.user.name}` : ""}
       </div>
       <div className="flex-none gap-2">
