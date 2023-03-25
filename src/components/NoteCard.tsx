@@ -1,3 +1,5 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 import ReactMarkdown from "react-markdown";
@@ -14,6 +16,7 @@ export const NoteCard = ({
   onDelete: () => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isOver, setIsOver] = useState<boolean>(false);
 
   return (
     <div className="card mt-5 border border-gray-200 bg-base-100 shadow-xl">
@@ -26,14 +29,24 @@ export const NoteCard = ({
         >
           <div className="collapse-title text-xl font-bold">{note.title}</div>
           <div className="collapse-content">
-            <article className="prose lg:prose-xl">
+            <article className="prose md:prose-lg">
               <ReactMarkdown>{note.content}</ReactMarkdown>
             </article>
           </div>
         </div>
         <div className="card-actions mx-2 flex justify-end">
-          <button className="btn-warning btn-xs btn px-5" onClick={onDelete}>
-            Delete
+          <button
+            className="tooltip tooltip-bottom tooltip-accent px-5"
+            data-tip="Delete?"
+            onClick={onDelete}
+            onMouseOver={() => setIsOver(!isOver)}
+          >
+            <FontAwesomeIcon
+              icon={faTrash}
+              size="xl"
+              style={{ color: "#ff4f4f" }}
+              //   title="Delete?"
+            />
           </button>
         </div>
       </div>
