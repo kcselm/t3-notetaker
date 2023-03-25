@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api, type RouterOutputs } from "~/utils/api";
-import { NoteEditor } from "~/components/NoteEditor";
 import { Header } from "~/components/Header";
+import { NoteEditor } from "~/components/NoteEditor";
+import { NoteCard } from "~/components/NoteCard";
 
 const Home: NextPage = () => {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -99,6 +100,16 @@ const Content: React.FC = () => {
         />
       </div>
       <div className="col-span-3">
+        <div>
+          {notes?.map((note) => (
+            <div key={note.id} className="mt-5">
+              <NoteCard
+                note={note}
+                onDelete={() => void deleteNote.mutate({ id: note.id })}
+              />
+            </div>
+          ))}
+        </div>
         <NoteEditor
           onSave={({ title, content }) => {
             void createNote.mutate({
