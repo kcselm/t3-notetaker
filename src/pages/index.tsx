@@ -50,6 +50,7 @@ const Content: React.FC = () => {
   const deleteTopic = api.topic.delete.useMutation({
     onSuccess: () => {
       void refetchTopics();
+      setSelectedTopic(null);
     },
   });
 
@@ -107,7 +108,6 @@ const Content: React.FC = () => {
                   className="tooltip tooltip-bottom tooltip-accent ml-auto"
                   data-tip="Delete?"
                   onClick={() => void deleteTopic.mutate({ id: topic.id })}
-                  // onMouseOver={() => setIsOver(!isOver)}
                 >
                   <FontAwesomeIcon
                     icon={faTrash}
@@ -115,7 +115,6 @@ const Content: React.FC = () => {
                     style={{
                       color: "#ff4f4f",
                     }}
-                    //   title="Delete?"
                   />
                 </button>
               </a>
