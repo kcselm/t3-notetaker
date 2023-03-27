@@ -7,6 +7,8 @@ import { api, type RouterOutputs } from "~/utils/api";
 import { Header } from "~/components/Header";
 import { NoteEditor } from "~/components/NoteEditor";
 import { NoteCard } from "~/components/NoteCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const Home: NextPage = () => {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -40,6 +42,12 @@ const Content: React.FC = () => {
   );
 
   const createTopic = api.topic.create.useMutation({
+    onSuccess: () => {
+      void refetchTopics();
+    },
+  });
+
+  const deleteTopic = api.topic.delete.useMutation({
     onSuccess: () => {
       void refetchTopics();
     },
@@ -84,7 +92,7 @@ const Content: React.FC = () => {
         />
         <div className="divider"></div>
 
-        <ul className="menu rounded-box w-56 bg-base-100 p-2">
+        <ul className="menu rounded-box bg-base-100 p-2">
           {topics?.map((topic) => (
             <li key={topic.id}>
               <a
@@ -95,6 +103,21 @@ const Content: React.FC = () => {
                 }}
               >
                 {topic.title}
+                <button
+                  className="tooltip tooltip-bottom tooltip-accent ml-auto"
+                  data-tip="Delete?"
+                  onClick={() => void deleteTopic.mutate({ id: topic.id })}
+                  // onMouseOver={() => setIsOver(!isOver)}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    size="sm"
+                    style={{
+                      color: "#ff4f4f",
+                    }}
+                    //   title="Delete?"
+                  />
+                </button>
               </a>
             </li>
           ))}
